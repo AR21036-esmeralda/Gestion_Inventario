@@ -1,389 +1,117 @@
-// =============================================
-// MODULO DE MOVIMIENTO DE INVENTARIO
-// =============================================
-
-// =============================================
-// DECLARACION DE ARREGLOS GLOBALES
-// =============================================
-Dimension productos[100]
-Dimension stock[100]
-Dimension precio[100]
-Dimension existe_producto[100]  // Bandera para saber si el producto existe
-
-// Arreglos para movimientos
-Dimension mov_tipo[1000]
-Dimension mov_cantidad[1000]
-Dimension mov_fecha[1000]
-Dimension mov_producto_id[1000]
-Dimension mov_usuario[1000]
-
-contador_movimientos <- 0
-
-// =============================================
-// SUBPROCESO PARA INICIALIZAR DATOS DE PRUEBA
-// =============================================
-Subproceso InicializarDatosPrueba()
-    Definir i Como Entero
+Algoritmo InventarioSimple
+    Definir opcion, id, cantidad, i, encontrado Como Entero
+    Definir productos, stock, precio Como Cadena
+    Dimension productos[20], stock[20], precio[20]
+    Definir num_productos Como Entero
     
-    // Inicializar todos los productos como vacios
-    Para i <- 1 Hasta 100 Hacer
-        productos[i] <- ""
-        stock[i] <- 0
-        precio[i] <- 0
-        existe_producto[i] <- Falso
-    FinPara
+    num_productos <- 5
     
-    // Cargar productos de prueba
+    // PRODUCTOS DE PRUEBA
     productos[1] <- "LAPTOP"
-    stock[1] <- 10
-    precio[1] <- 800
-    existe_producto[1] <- Verdadero
+    stock[1] <- "10"
+    precio[1] <- "800"
     
     productos[2] <- "MOUSE"
-    stock[2] <- 50
-    precio[2] <- 25
-    existe_producto[2] <- Verdadero
+    stock[2] <- "50"
+    precio[2] <- "25"
     
     productos[3] <- "TECLADO"
-    stock[3] <- 30
-    precio[3] <- 45
-    existe_producto[3] <- Verdadero
+    stock[3] <- "30"
+    precio[3] <- "45"
     
     productos[4] <- "MONITOR"
-    stock[4] <- 15
-    precio[4] <- 350
-    existe_producto[4] <- Verdadero
+    stock[4] <- "15"
+    precio[4] <- "350"
     
     productos[5] <- "IMPRESORA"
-    stock[5] <- 8
-    precio[5] <- 280
-    existe_producto[5] <- Verdadero
-FinSubproceso
-
-// =============================================
-// 1. REGISTRAR ENTRADA DE PRODUCTOS
-// =============================================
-Subproceso RegistrarEntrada()
-    Definir id_producto, cantidad Como Entero
-    Definir usuario Como Cadena
-    
-    Escribir "====================================="
-    Escribir "REGISTRO DE ENTRADA"
-    Escribir "====================================="
-    Escribir "ID del producto: "
-    Leer id_producto
-    Escribir "Cantidad a ingresar: "
-    Leer cantidad
-    Escribir "Usuario que registra: "
-    Leer usuario
-    
-    // VALIDACIONES CRITICAS
-    Si id_producto >= 1 Y id_producto <= 100 Entonces
-        Si existe_producto[id_producto] = Verdadero Entonces
-            // Actualizar stock
-            stock[id_producto] <- stock[id_producto] + cantidad
-            
-            // Registrar movimiento
-            contador_movimientos <- contador_movimientos + 1
-            mov_tipo[contador_movimientos] <- "ENTRADA"
-            mov_cantidad[contador_movimientos] <- cantidad
-            mov_producto_id[contador_movimientos] <- id_producto
-            mov_usuario[contador_movimientos] <- usuario
-            mov_fecha[contador_movimientos] <- ConvertirATexto(Fecha)
-            
-            Escribir ""
-            Escribir "*** ENTRADA REGISTRADA EXITOSAMENTE ***"
-            Escribir "Producto: ", productos[id_producto]
-            Escribir "Cantidad: ", cantidad
-            Escribir "Stock actual: ", stock[id_producto]
-            Escribir "Usuario: ", usuario
-            Escribir "Fecha: ", mov_fecha[contador_movimientos]
-            Escribir ""
-        Sino
-            Escribir ""
-            Escribir "*** ERROR: Producto no encontrado (ID: ", id_producto, ") ***"
-            Escribir ""
-        FinSi
-    Sino
-        Escribir ""
-        Escribir "*** ERROR: ID fuera de rango (debe ser 1-100) ***"
-        Escribir ""
-    FinSi
-FinSubproceso
-
-// =============================================
-// 2. REGISTRAR SALIDA DE PRODUCTOS
-// =============================================
-Subproceso RegistrarSalida()
-    Definir id_producto, cantidad Como Entero
-    Definir usuario Como Cadena
-    
-    Escribir "====================================="
-    Escribir "REGISTRO DE SALIDA"
-    Escribir "====================================="
-    Escribir "ID del producto: "
-    Leer id_producto
-    Escribir "Cantidad a retirar: "
-    Leer cantidad
-    Escribir "Usuario que registra: "
-    Leer usuario
-    
-    // VALIDACIONES CRITICAS
-    Si id_producto >= 1 Y id_producto <= 100 Entonces
-        Si existe_producto[id_producto] = Verdadero Entonces
-            Si stock[id_producto] >= cantidad Entonces
-                // Actualizar stock
-                stock[id_producto] <- stock[id_producto] - cantidad
-                
-                // Registrar movimiento
-                contador_movimientos <- contador_movimientos + 1
-                mov_tipo[contador_movimientos] <- "SALIDA"
-                mov_cantidad[contador_movimientos] <- cantidad
-                mov_producto_id[contador_movimientos] <- id_producto
-                mov_usuario[contador_movimientos] <- usuario
-                mov_fecha[contador_movimientos] <- ConvertirATexto(Fecha)
-                
-                Escribir ""
-                Escribir "*** SALIDA REGISTRADA EXITOSAMENTE ***"
-                Escribir "Producto: ", productos[id_producto]
-                Escribir "Cantidad: ", cantidad
-                Escribir "Stock restante: ", stock[id_producto]
-                Escribir "Usuario: ", usuario
-                Escribir "Fecha: ", mov_fecha[contador_movimientos]
-                Escribir ""
-            Sino
-                Escribir ""
-                Escribir "*** ERROR: Stock insuficiente ***"
-                Escribir "Stock actual: ", stock[id_producto]
-                Escribir "Cantidad solicitada: ", cantidad
-                Escribir ""
-            FinSi
-        Sino
-            Escribir ""
-            Escribir "*** ERROR: Producto no encontrado (ID: ", id_producto, ") ***"
-            Escribir ""
-        FinSi
-    Sino
-        Escribir ""
-        Escribir "*** ERROR: ID fuera de rango (debe ser 1-100) ***"
-        Escribir ""
-    FinSi
-FinSubproceso
-
-// =============================================
-// 3. CONSULTAR STOCK ACTUAL
-// =============================================
-Subproceso ConsultarStock()
-    Definir id_producto Como Entero
-    
-    Escribir "====================================="
-    Escribir "CONSULTA DE STOCK"
-    Escribir "====================================="
-    Escribir "ID del producto: "
-    Leer id_producto
-    
-    Si id_producto >= 1 Y id_producto <= 100 Entonces
-        Si existe_producto[id_producto] = Verdadero Entonces
-            Escribir ""
-            Escribir "*** INFORMACION DEL PRODUCTO ***"
-            Escribir "ID: ", id_producto
-            Escribir "Producto: ", productos[id_producto]
-            Escribir "Stock actual: ", stock[id_producto]
-            Escribir "Precio unitario: $", precio[id_producto]
-            Escribir ""
-        Sino
-            Escribir ""
-            Escribir "*** ERROR: Producto no encontrado (ID: ", id_producto, ") ***"
-            Escribir ""
-        FinSi
-    Sino
-        Escribir ""
-        Escribir "*** ERROR: ID fuera de rango (debe ser 1-100) ***"
-        Escribir ""
-    FinSi
-FinSubproceso
-
-// =============================================
-// 4. VER MOVIMIENTOS POR PRODUCTO
-// =============================================
-Subproceso VerMovimientosPorProducto()
-    Definir id_producto, i Como Entero
-    Definir hay_movimientos Como Logico
-    
-    Escribir "====================================="
-    Escribir "MOVIMIENTOS POR PRODUCTO"
-    Escribir "====================================="
-    Escribir "ID del producto: "
-    Leer id_producto
-    
-    Si id_producto >= 1 Y id_producto <= 100 Entonces
-        Si existe_producto[id_producto] = Verdadero Entonces
-            hay_movimientos <- Falso
-            
-            Escribir ""
-            Escribir "*** PRODUCTO: ", productos[id_producto], " ***"
-            Escribir "Stock actual: ", stock[id_producto]
-            Escribir "-------------------------------------"
-            
-            Para i <- 1 Hasta contador_movimientos Hacer
-                Si mov_producto_id[i] = id_producto Entonces
-                    Escribir "Fecha: ", mov_fecha[i]
-                    Escribir "Tipo: ", mov_tipo[i]
-                    Escribir "Cantidad: ", mov_cantidad[i]
-                    Escribir "Usuario: ", mov_usuario[i]
-                    Escribir "-------------------------------------"
-                    hay_movimientos <- Verdadero
-                FinSi
-            FinPara
-            
-            Si hay_movimientos = Falso Entonces
-                Escribir "No hay movimientos registrados para este producto"
-                Escribir "-------------------------------------"
-            FinSi
-            Escribir ""
-        Sino
-            Escribir ""
-            Escribir "*** ERROR: Producto no encontrado (ID: ", id_producto, ") ***"
-            Escribir ""
-        FinSi
-    Sino
-        Escribir ""
-        Escribir "*** ERROR: ID fuera de rango (debe ser 1-100) ***"
-        Escribir ""
-    FinSi
-FinSubproceso
-
-// =============================================
-// 5. VER HISTORIAL COMPLETO DE MOVIMIENTOS
-// =============================================
-Subproceso VerHistorialCompleto()
-    Definir i Como Entero
-    
-    Escribir "====================================="
-    Escribir "HISTORIAL COMPLETO DE MOVIMIENTOS"
-    Escribir "====================================="
-    
-    Si contador_movimientos = 0 Entonces
-        Escribir ""
-        Escribir "No hay movimientos registrados"
-        Escribir ""
-    Sino
-        Escribir "Total de movimientos: ", contador_movimientos
-        Escribir "-------------------------------------"
-        
-        Para i <- 1 Hasta contador_movimientos Hacer
-            Escribir "Movimiento #", i
-            Escribir "Fecha: ", mov_fecha[i]
-            Escribir "Producto: ", productos[mov_producto_id[i]]
-            Escribir "Tipo: ", mov_tipo[i]
-            Escribir "Cantidad: ", mov_cantidad[i]
-            Escribir "Usuario: ", mov_usuario[i]
-            Escribir "-------------------------------------"
-        FinPara
-        Escribir ""
-    FinSi
-FinSubproceso
-
-// =============================================
-// 6. LISTAR TODOS LOS PRODUCTOS
-// =============================================
-Subproceso ListarProductos()
-    Definir i Como Entero
-    Definir contador Como Entero
-    
-    contador <- 0
-    
-    Escribir "====================================="
-    Escribir "LISTADO DE PRODUCTOS"
-    Escribir "====================================="
-    
-    Para i <- 1 Hasta 100 Hacer
-        Si existe_producto[i] = Verdadero Entonces
-            contador <- contador + 1
-            Escribir "ID: ", i, " | ", productos[i], " | Stock: ", stock[i], " | $", precio[i]
-        FinSi
-    FinPara
-    
-    Si contador = 0 Entonces
-        Escribir "No hay productos registrados"
-    Sino
-        Escribir "-------------------------------------"
-        Escribir "Total de productos: ", contador
-    FinSi
-    Escribir ""
-FinSubproceso
-
-// =============================================
-// 7. MENU PRINCIPAL DEL MODULO
-// =============================================
-Subproceso MenuMovimientoInventario()
-    Definir opcion Como Entero
+    stock[5] <- "8"
+    precio[5] <- "280"
     
     Repetir
-        Borrar Pantalla
-        Escribir "====================================="
-        Escribir "     MOVIMIENTO DE INVENTARIO"
-        Escribir "====================================="
+        Escribir "================================"
+        Escribir "      MENU INVENTARIO"
+        Escribir "================================"
         Escribir "1. Registrar ENTRADA"
-        Escribir "2. Registrar SALIDA"
-        Escribir "3. Consultar stock"
-        Escribir "4. Ver movimientos por producto"
-        Escribir "5. Ver historial completo"
-        Escribir "6. Listar todos los productos"
-        Escribir "7. SALIR"
-        Escribir "====================================="
-        Escribir "Seleccione una opcion: "
+        Escribir "2. Registrar SALIDA"  
+        Escribir "3. Consultar STOCK"
+        Escribir "4. Listar PRODUCTOS"
+        Escribir "5. SALIR"
+        Escribir "================================"
+        Escribir "Opcion: "
         Leer opcion
         
-        Segun opcion Hacer
-            Caso 1:
-                Borrar Pantalla
-                RegistrarEntrada()
-                Escribir "Presione ENTER para continuar..."
-                Esperar Tecla
-            Caso 2:
-                Borrar Pantalla
-                RegistrarSalida()
-                Escribir "Presione ENTER para continuar..."
-                Esperar Tecla
-            Caso 3:
-                Borrar Pantalla
-                ConsultarStock()
-                Escribir "Presione ENTER para continuar..."
-                Esperar Tecla
-            Caso 4:
-                Borrar Pantalla
-                VerMovimientosPorProducto()
-                Escribir "Presione ENTER para continuar..."
-                Esperar Tecla
-            Caso 5:
-                Borrar Pantalla
-                VerHistorialCompleto()
-                Escribir "Presione ENTER para continuar..."
-                Esperar Tecla
-            Caso 6:
-                Borrar Pantalla
-                ListarProductos()
-                Escribir "Presione ENTER para continuar..."
-                Esperar Tecla
-            Caso 7:
-                Borrar Pantalla
-                Escribir "Saliendo del modulo..."
-                Escribir "Hasta luego!"
-            De Otro Modo:
-                Borrar Pantalla
-                Escribir "*** Opcion no valida ***"
-                Escribir "Presione ENTER para continuar..."
-                Esperar Tecla
-        FinSegun
+        Si opcion = 1 Entonces
+            Escribir "ID del producto (1-", num_productos, "): "
+            Leer id
+            Si id >= 1 Y id <= num_productos Entonces
+                Escribir "Producto: ", productos[id]
+                Escribir "Stock actual: ", stock[id]
+                Escribir "Cantidad a ingresar: "
+                Leer cantidad
+                stock[id] <- ConvertirATexto(ConvertirANumero(stock[id]) + cantidad)
+                Escribir "Nuevo stock: ", stock[id]
+            Sino
+                Escribir "ID no valido"
+            FinSi
+            
+        Sino
+            Si opcion = 2 Entonces
+                Escribir "ID del producto (1-", num_productos, "): "
+                Leer id
+                Si id >= 1 Y id <= num_productos Entonces
+                    Escribir "Producto: ", productos[id]
+                    Escribir "Stock actual: ", stock[id]
+                    Escribir "Cantidad a retirar: "
+                    Leer cantidad
+                    Si ConvertirANumero(stock[id]) >= cantidad Entonces
+                        stock[id] <- ConvertirATexto(ConvertirANumero(stock[id]) - cantidad)
+                        Escribir "Nuevo stock: ", stock[id]
+                    Sino
+                        Escribir "Stock insuficiente"
+                    FinSi
+                Sino
+                    Escribir "ID no valido"
+                FinSi
+                
+            Sino
+                Si opcion = 3 Entonces
+                    Escribir "ID del producto (1-", num_productos, "): "
+                    Leer id
+                    Si id >= 1 Y id <= num_productos Entonces
+                        Escribir "================================"
+                        Escribir "PRODUCTO: ", productos[id]
+                        Escribir "STOCK: ", stock[id]
+                        Escribir "PRECIO: $", precio[id]
+                        Escribir "================================"
+                    Sino
+                        Escribir "ID no valido"
+                    FinSi
+                    
+                Sino
+                    Si opcion = 4 Entonces
+                        Escribir "================================"
+                        Escribir "LISTA DE PRODUCTOS"
+                        Escribir "================================"
+                        Para i <- 1 Hasta num_productos Con Paso 1 Hacer
+                            Escribir i, ". ", productos[i], " - Stock: ", stock[i], " - $", precio[i]
+                        FinPara
+                        
+                    Sino
+                        Si opcion <> 5 Entonces
+                            Escribir "Opcion no valida"
+                        FinSi
+                    FinSi
+                FinSi
+            FinSi
+        FinSi
         
-    Hasta Que opcion = 7
-FinSubproceso
-
-// =============================================
-// PROGRAMA PRINCIPAL
-// =============================================
-Algoritmo ModuloMovimientoInventario
-    InicializarDatosPrueba()
-    MenuMovimientoInventario()
+        Si opcion >= 1 Y opcion <= 4 Entonces
+            Escribir ""
+            Escribir "Presione ENTER para continuar..."
+            Esperar Tecla
+        FinSi
+        
+    Hasta Que opcion = 5
+    
+    Escribir "Programa finalizado"
 FinAlgoritmo
