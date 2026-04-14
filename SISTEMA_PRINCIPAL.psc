@@ -1,5 +1,12 @@
 Algoritmo Sistema_Gestion_Inventario_Grupo1
-	Definir opcion_principal Como Entero
+	// 1. DEFINICION DE VARIABLES GLOBALES (Compartidas)
+	Definir nombres Como Caracter
+	Definir precios Como Real
+	Definir stocks, contador, eleccion, limite, codigo Como Entero
+	
+	limite <- 100
+	Dimension codigo[limite], nombres[limite], precios[limite], stocks[limite]
+	contador <- 1 // Este contador rastrea cuantos productos existen
 	
 	Repetir
 		Limpiar Pantalla
@@ -7,155 +14,141 @@ Algoritmo Sistema_Gestion_Inventario_Grupo1
 		Escribir "   SISTEMA INTEGRADO DE INVENTARIO - GRUPO 1"
 		Escribir "================================================="
 		Escribir "1. Modulo de Gestion de Productos (Esmeralda)"
-		Escribir "2. Modulo de Movimientos de Inventario (Cesar)"
+		Escribir "2. Modulo de Movimientos de Inventario (Armando)"
 		Escribir "3. Salir del Sistema"
 		Escribir "-------------------------------------------------"
 		Escribir "Seleccione una opcion: "
-		Leer opcion_principal
+		Leer eleccion
 		
-		Segun opcion_principal Hacer
+		Segun eleccion Hacer
 			1:
-				Modulo_Esmeralda_Gestion
+				Modulo_Esmeralda_Gestion(nombres, precios, stocks, codigo, contador)
 			2:
-				Modulo_Cesar_Movimientos
+				// Usamos el codigo que te mando Esmeralda
+				Modulo_Movimientos(nombres, precios, stocks, codigo, contador)
 			3:
-				Escribir "Cerrando sistema... ¡Exitos en la defensa!"
+				Escribir "Cerrando sistema... Â¡Exitos en la defensa de hoy!"
 			De Otro Modo:
 				Escribir "Opcion no valida."
 				Esperar 2 Segundos
 		Fin Segun
-	Hasta Que opcion_principal = 3
+	Hasta Que eleccion = 3
 FinAlgoritmo
 
-SubProceso Modulo_Esmeralda_Gestion
-	Definir nombres Como Caracter
-	Definir precios Como Real
-	Definir stocks,contador,eleccion,limite,codigo,modificar, i,m Como Entero
-	contador <- 1
-	limite <- 100
-	
-	Dimension codigo[limite]
-	Dimension nombres[limite]
-	Dimension precios[limite]
-	Dimension stocks[limite]
-	
+// --- MODULO DE ESMERALDA ---
+SubProceso Modulo_Esmeralda_Gestion(nombres Por Referencia, precios Por Referencia, stocks Por Referencia, codigo Por Referencia, contador Por Referencia)
+	Definir eleccion_e, i Como Entero
 	Repetir
 		Limpiar Pantalla
 		Escribir "--------MODULO GESTION DE PRODUCTOS-------" 
 		Escribir "1. Crear producto"
 		Escribir "2. Mostrar Productos"
-		Escribir "3. Modificar informacion de producto"
-		Escribir "4. Regresar al Menu Principal"
-		Escribir "------------------------------------------"
-		Leer eleccion 
-		
-		Segun eleccion Hacer
+		Escribir "3. Regresar al Menu Principal"
+		Leer eleccion_e
+		Segun eleccion_e Hacer
 			1: 
-				Si contador < limite Entonces
-					Escribir "Ingrese el codigo del producto:"
-					Leer codigo[contador]
-					Escribir "Ingrese el nombre del producto:"
-					Leer nombres[contador]
-					Escribir "Ingrese el precio unitario:"
-					Leer precios[contador]
-					Escribir "Ingrese cantidad en bodega:"
-					Leer stocks[contador]
-					contador <- contador + 1
-					Escribir "Producto registrado."
-				SiNo
-					Escribir "No hay espacio para más productos."
-				Fin Si
+				Escribir "Ingrese el codigo del producto:"
+				Leer codigo[contador]
+				Escribir "Ingrese el nombre del producto:"
+				Leer nombres[contador]
+				Escribir "Ingrese el precio unitario:"
+				Leer precios[contador]
+				Escribir "Ingrese cantidad inicial de stock:"
+				Leer stocks[contador]
+				contador <- contador + 1
+				Escribir "Producto registrado con exito."
 				Esperar 1 Segundo
 			2:
-				Si contador = 1 Entonces 
-					Escribir "No hay productos por mostrar."
+				Si contador = 1 Entonces
+					Escribir "No hay productos registrados."
 				SiNo
 					Para i<-1 Hasta contador-1 Hacer
-						Escribir i, " - Codigo: ", codigo[i], " | Producto: ", nombres[i], " | Precio: $", precios[i], " | Stock: ", stocks[i]			
+						Escribir i, "- Codigo: ", codigo[i], " | Producto: ", nombres[i], " | Stock: ", stocks[i]
 					FinPara
 				FinSi
 				Escribir "Presione una tecla para continuar..."
 				Esperar Tecla
-			3:	
-				Escribir "Ingrese el codigo del producto a modificar:"
-				Leer modificar
-				Para m<-1 Hasta contador-1 Hacer
-					si modificar = codigo[m] Entonces
-						Escribir "Nueva cantidad de stock:"
-						Leer stocks[m]
-						Escribir "Nuevo precio:"
-						Leer precios[m]
-						Escribir "--- Datos Modificados con exito ---"
-						Escribir "Codigo: ", codigo[m], " | Producto: ", nombres[m], " | Stock: ", stocks[m]
-					SiNo
-						Escribir "Buscando..."
-					FinSi
-				FinPara
-				Esperar 1 Segundo
 		FinSegun
-	Hasta Que eleccion = 4
+	Hasta Que eleccion_e = 3
 FinSubProceso
 
-SubProceso Modulo_Cesar_Movimientos
-	Definir opcion_c Como Entero
+// --- TU MODULO (EL QUE TE MANDO ELLA) ---
+SubProceso Modulo_Movimientos(nombres Por Referencia, precios Por Referencia, stocks Por Referencia, codigo Por Referencia, contador Por Referencia)
 	
-	// Datos de inicializacion para la demo
-	Dimension prod_c[100], stock_c[100], existe_c[100]
-	Para i <- 1 Hasta 100 Hacer
-		existe_c[i] <- Falso
-	FinPara
-	
-	prod_c[1] <- "LAPTOP"; stock_c[1] <- 10; existe_c[1] <- Verdadero
-	prod_c[2] <- "MOUSE"; stock_c[2] <- 50; existe_c[2] <- Verdadero
+	Definir opcion, i, id, cantidad, encontrado Como Entero
 	
 	Repetir
 		Limpiar Pantalla
-		Escribir "======= MOVIMIENTOS DE INVENTARIO ======="
-		Escribir "1. Registrar ENTRADA"
-		Escribir "2. Registrar SALIDA"
-		Escribir "3. Listar productos de prueba"
-		Escribir "4. Regresar al Menu Principal"
-		Escribir "=========================================="
-		Leer opcion_c
+		Escribir "---- MOVIMIENTOS ----"
+		Escribir "1. Entrada"
+		Escribir "2. Salida"
+		Escribir "3. Ver productos"
+		Escribir "4. Regresar"
+		Leer opcion
 		
-		Segun opcion_c Hacer
+		Segun opcion Hacer
+			
 			1:
-				Definir id_p, cant Como Entero
-				Escribir "ID del producto (1-100):"
-				Leer id_p
-				Si id_p >= 1 y id_p <= 100 y existe_c[id_p] Entonces
-					Escribir "Cantidad a ingresar:"
-					Leer cant
-					stock_c[id_p] <- stock_c[id_p] + cant
-					Escribir "Entrada registrada. Stock actual: ", stock_c[id_p]
-				SiNo
-					Escribir "Error: ID no valido o producto no existe."
-				FinSi
-				Esperar 2 Segundos
-			2:
-				Escribir "ID del producto (1-100):"
-				Leer id_p
-				Si id_p >= 1 y id_p <= 100 y existe_c[id_p] Entonces
-					Escribir "Cantidad a retirar:"
-					Leer cant
-					Si stock_c[id_p] >= cant Entonces
-						stock_c[id_p] <- stock_c[id_p] - cant
-						Escribir "Salida registrada. Stock restante: ", stock_c[id_p]
-					SiNo
-						Escribir "Error: Stock insuficiente."
-					FinSi
-				SiNo
-					Escribir "Error: ID no valido."
-				FinSi
-				Esperar 2 Segundos
-			3:
-				Para i <- 1 Hasta 100 Hacer
-					Si existe_c[i] Entonces
-						Escribir "ID: ", i, " | ", prod_c[i], " | Stock: ", stock_c[i]
+				Escribir "Codigo producto:"
+				Leer id
+				
+				encontrado <- 0
+				
+				Para i <- 1 Hasta contador-1 Hacer
+					Si codigo[i] = id Entonces
+						encontrado <- 1
+						
+						Escribir "Cantidad a ingresar:"
+						Leer cantidad
+						
+						stocks[i] <- stocks[i] + cantidad
+						
+						Escribir "Nuevo stock:", stocks[i]
 					FinSi
 				FinPara
-				Escribir "Presione una tecla..."
+				
+				Si encontrado = 0 Entonces
+					Escribir "Producto no encontrado"
+				FinSi
+				
+				Esperar 3 Segundos
+				
+			2:
+				Escribir "Codigo producto:"
+				Leer id
+				
+				encontrado <- 0
+				
+				Para i <- 1 Hasta contador-1 Hacer
+					Si codigo[i] = id Entonces
+						encontrado <- 1
+						
+						Escribir "Cantidad a retirar:"
+						Leer cantidad
+						
+						Si stocks[i] >= cantidad Entonces
+							stocks[i] <- stocks[i] - cantidad
+							Escribir "Stock restante:", stocks[i]
+						SiNo
+							Escribir "Stock insuficiente"
+						FinSi
+					FinSi
+				FinPara
+				
+				Si encontrado = 0 Entonces
+					Escribir "Producto no encontrado"
+				FinSi
+				
+				Esperar 1 Segundo
+				
+			3:
+				Para i <- 1 Hasta contador-1 Hacer
+					Escribir "Codigo:", codigo[i], " | ", nombres[i], " | Stock:", stocks[i]
+				FinPara
 				Esperar Tecla
+				
 		FinSegun
-	Hasta Que opcion_c = 4
+		
+	Hasta Que opcion = 4
+	
 FinSubProceso
