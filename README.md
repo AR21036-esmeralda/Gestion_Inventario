@@ -1,12 +1,19 @@
-# Gestion_Inventario
-Sistema de gestión de inventario
+# Gestión de Inventario - Grupo 1
 
-Descripcion:
-Este proyecto consiste en el desarrollo de un sistema de gestión de inventarios que permite administrar un catálogo de productos y sus proveedores. El sistema registra cada entrada y salida de stock, actualizando la cantidad disponible y evitando el stock negativo, además de considerar el manejo de concurrencia para mantener la integridad de los datos.
+# Descripción del Proyecto
+Este sistema CLI desarrollado en Python permite la administración integral de un catálogo de productos y sus proveedores. El objetivo es automatizar el registro de entradas y salidas de stock, garantizando la integridad de los datos y evitando existencias negativas.
 
-Integrantes Grupo 1 :
-Esmeralda Isabel Alvarez Rivas 
+# Funcionalidades Principales (Entrega #1 - Pseudocódigo)
+**Módulo de Gestión de Productos:** Registro, consulta y actualización de la información base de los productos.
+**Módulo de Movimientos de Inventario:** Control de entradas y salidas de mercancía con validación de stock.
+**Integración de Datos:** Lógica para mantener la coherencia entre el catálogo y los movimientos realizados.
 
-Cesar Ezequiel Aguilar Peralta
+## Integrantes
+* Esmeralda Isabel Alvarez Rivas
+* Cesar Ezequiel Aguilar Peralta
+* Luis Armando Argueta Villalobos
 
-Luis Armando Argueta Villalobos
+## Tecnologías Utilizadas
+**PSeInt:** Para el desarrollo de la lógica inicial en pseudocódigo.
+**GitHub:** Control de versiones y colaboración.
+**Python:** (Próximamente) Para la implementación final de la aplicación CLI.
