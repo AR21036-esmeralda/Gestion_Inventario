@@ -11,10 +11,10 @@ Algoritmo Sistema_Gestion_Inventario_Grupo1
 	Repetir
 		Limpiar Pantalla
 		Escribir "================================================="
-		Escribir "   SISTEMA INTEGRADO DE INVENTARIO - GRUPO 1"
+		Escribir "   SISTEMA INTEGRADO DE INVENTARIO "
 		Escribir "================================================="
-		Escribir "1. Modulo de Gestion de Productos (Esmeralda)"
-		Escribir "2. Modulo de Movimientos de Inventario (Armando)"
+		Escribir "1. Modulo de Gestion de Productos "
+		Escribir "2. Modulo de Movimientos de Inventario "
 		Escribir "3. Salir del Sistema"
 		Escribir "-------------------------------------------------"
 		Escribir "Seleccione una opcion: "
@@ -22,12 +22,12 @@ Algoritmo Sistema_Gestion_Inventario_Grupo1
 		
 		Segun eleccion Hacer
 			1:
-				Modulo_Esmeralda_Gestion(nombres, precios, stocks, codigo, contador)
+				Modulo_Gestion_Productos(nombres, precios, stocks, codigo, contador)
 			2:
-				// Usamos el codigo que te mando Esmeralda
+				
 				Modulo_Movimientos(nombres, precios, stocks, codigo, contador)
 			3:
-				Escribir "Cerrando sistema... ¡Exitos en la defensa de hoy!"
+				Escribir "Cerrando sistema... "
 			De Otro Modo:
 				Escribir "Opcion no valida."
 				Esperar 2 Segundos
@@ -35,8 +35,8 @@ Algoritmo Sistema_Gestion_Inventario_Grupo1
 	Hasta Que eleccion = 3
 FinAlgoritmo
 
-// --- MODULO DE ESMERALDA ---
-SubProceso Modulo_Esmeralda_Gestion(nombres Por Referencia, precios Por Referencia, stocks Por Referencia, codigo Por Referencia, contador Por Referencia)
+
+SubProceso Modulo_Gestion_Productos(nombres Por Referencia, precios Por Referencia, stocks Por Referencia, codigo Por Referencia, contador Por Referencia)
 	Definir eleccion_e, i Como Entero
 	Repetir
 		Limpiar Pantalla
@@ -72,7 +72,6 @@ SubProceso Modulo_Esmeralda_Gestion(nombres Por Referencia, precios Por Referenc
 	Hasta Que eleccion_e = 3
 FinSubProceso
 
-// --- TU MODULO (EL QUE TE MANDO ELLA) ---
 SubProceso Modulo_Movimientos(nombres Por Referencia, precios Por Referencia, stocks Por Referencia, codigo Por Referencia, contador Por Referencia)
 	
 	Definir opcion, i, id, cantidad, encontrado Como Entero
