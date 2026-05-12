@@ -1,4 +1,16 @@
-def validar_numero_positivo(mensaje):
+def validar_numero_entero_positivo(mensaje):
+       while True:
+          try:
+             valor= int(input(mensaje))
+             if valor< 0:
+                print("Error: no puede ser negativo")
+             else:
+                return valor
+          except:
+             print("Error: debe ingresar un numero valido" )
+
+
+def validar_numero_decimal_positivo(mensaje):
        while True:
           try:
              valor= float(input(mensaje))
@@ -7,8 +19,7 @@ def validar_numero_positivo(mensaje):
              else:
                 return valor
           except:
-             print("Error: debe ingresar un numero valido" )
-                   
+             print("Error: debe ingresar un numero valido" )                   
 
 
 
@@ -22,9 +33,9 @@ def ingresar_producto(inventario):
     
     nombre= input("Ingrese el nombre del producto: ")
        
-    precio= validar_numero_positivo("Ingrese el precio del producto: ") 
+    precio= validar_numero_decimal_positivo("Ingrese el precio del producto: ") 
     
-    stock= validar_numero_positivo("Ingrese la cantidad de producto en bodega: ") 
+    stock= validar_numero_entero_positivo("Ingrese la cantidad de producto en bodega: ") 
     
 
      
@@ -81,8 +92,8 @@ def editar_informacion_producto(inventario):
 
     if codigo in inventario:
          print("Producto encontrado. Ingrese los nuevos datos.")
-         nuevo_precio = validar_numero_positivo("Nuevo precio: ") 
-         nuevo_stock = validar_numero_positivo ("Nuevo stock: ")  
+         nuevo_precio = validar_numero_decimal_positivo("Nuevo precio: ") 
+         nuevo_stock = validar_numero_entero_positivo ("Nuevo stock: ")  
 
          inventario[codigo]["precio"] = nuevo_precio
          inventario[codigo]["stock"]= nuevo_stock
@@ -152,5 +163,6 @@ def main():
                 print("Opcion invalida")
    
 
-main()
-               
+if __name__ == "__main__":
+    main()
+     
