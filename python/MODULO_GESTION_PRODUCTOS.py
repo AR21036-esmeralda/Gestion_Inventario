@@ -36,8 +36,6 @@ def ingresar_producto(inventario):
     precio= validar_numero_decimal_positivo("Ingrese el precio del producto: ") 
     
     stock= validar_numero_entero_positivo("Ingrese la cantidad de producto en bodega: ") 
-    
-
      
     
       #Guarda un producto dentro del diccionario inventario usando el código como clave”
@@ -85,19 +83,39 @@ def buscar_producto(inventario):
         print("---------producto no encontrado---------")
 
 
-## cambiar la cantidad y precio
+
 def editar_informacion_producto(inventario):
     
     codigo= input("Ingrese el codigo del producto que desea modificar: ")
 
     if codigo in inventario:
-         print("Producto encontrado. Ingrese los nuevos datos.")
-         nuevo_precio = validar_numero_decimal_positivo("Nuevo precio: ") 
-         nuevo_stock = validar_numero_entero_positivo ("Nuevo stock: ")  
+         print("¿Qué desea modificar?")
+         print("1.Modificar Precio ")
+         print("2.Modificar stock ")
+         print("3.Modificar precio y stock ")
+         opcion = input("Ingrese opcion: ")
 
-         inventario[codigo]["precio"] = nuevo_precio
-         inventario[codigo]["stock"]= nuevo_stock
-         print("---------producto actualizado con exito---------")
+         match opcion :
+             case "1" :
+                 nuevo_precio = validar_numero_decimal_positivo("Nuevo precio: ")
+                 inventario[codigo]["precio"] = nuevo_precio
+                 print("---precio actualizado con exito---")
+
+             case "2":
+                 nuevo_stock=validar_numero_entero_positivo ("Nuevo stock: ")
+                 inventario[codigo]["stock"] = nuevo_stock  
+                 print("-----stock actualizado con exito-----")
+
+             case "3":
+                 nuevo_precio = validar_numero_decimal_positivo("Nuevo precio: ") 
+                 nuevo_stock = validar_numero_entero_positivo ("Nuevo stock: ")  
+
+                 inventario[codigo]["precio"] = nuevo_precio
+                 inventario[codigo]["stock"]= nuevo_stock
+                 print("----producto actualizado con exito-------")
+            
+             case _ :
+                 print("opcion invalida")
 
     else:
         print("producto no encontrado")
@@ -106,7 +124,7 @@ def editar_informacion_producto(inventario):
 
 def eliminar_producto(inventario):
     print("eliminar producto")
-    codigo=input("ingrese el codigo del producto que desea eliminar: ")
+    codigo=input("Ingrese el codigo del producto que desea eliminar: ")
     if codigo in inventario:
         del inventario[codigo]
         print("---------producto eliminado con exito---------")
@@ -130,7 +148,7 @@ def mostrar_menu():
     print("6.salir")
     print("=" * 40)
 
-def main():
+def main_prueba():
     inventario={}
     
     while True:
@@ -164,5 +182,5 @@ def main():
    
 
 if __name__ == "__main__":
-    main()
+    main_prueba()
      
