@@ -24,7 +24,7 @@ def validar_numero_decimal_positivo(mensaje):
 
 
 
-def ingresar_producto(inventario):
+def ingresar_producto(inventario,proveedores):
 
     codigo = input("Ingrese codigo del producto: ")
     if codigo in inventario:
@@ -36,6 +36,15 @@ def ingresar_producto(inventario):
     precio= validar_numero_decimal_positivo("Ingrese el precio del producto: ") 
     
     stock= validar_numero_entero_positivo("Ingrese la cantidad de producto en bodega: ") 
+
+    codigo_proveedor = input(
+    "Ingrese codigo del proveedor: "
+)
+
+    if codigo_proveedor not in proveedores:
+     print("Error: el proveedor no existe. Debe registrarlo antes de asignarlo al producto")
+     return 
+
      
     
       #Guarda un producto dentro del diccionario inventario usando el código como clave”
@@ -43,7 +52,8 @@ def ingresar_producto(inventario):
     inventario[codigo]={
        "nombre": nombre,
        "precio": precio,
-       "stock": stock
+       "stock": stock,
+       "proveedor": codigo_proveedor
     } 
 
     print ("---------Producto Ingresado con Exito  ------")
@@ -148,8 +158,8 @@ def mostrar_menu():
     print("6.salir")
     print("=" * 40)
 
-def main_prueba():
-    inventario={}
+def menu_productos(inventario, proveedores):
+
     
     while True:
         mostrar_menu()
@@ -157,7 +167,7 @@ def main_prueba():
 
         match opcion:
             case "1":
-             ingresar_producto(inventario)
+             ingresar_producto(inventario,proveedores)
         
 
             case "2":
@@ -174,13 +184,36 @@ def main_prueba():
                 
         
             case "6":
-              print("saliendo del programa...")
+              print("saliendo del modulo gestion productos...")
               break
 
             case _:
                 print("Opcion invalida")
    
 
+# Datos de prueba para ejecutar el modulo
+
 if __name__ == "__main__":
-    main_prueba()
-     
+
+    inventario = {}
+
+    proveedores = {
+
+        "PR001": {
+            "nombre": "TechSupply",
+            "telefono": "7777-7777",
+            "direccion": "San Salvador"
+        },
+
+        "PR002": {
+            "nombre": "OfficeMarket",
+            "telefono": "8888-8888",
+            "direccion": "Santa Ana"
+        }
+
+    }
+
+    menu_productos(
+        inventario,
+        proveedores
+    )     
