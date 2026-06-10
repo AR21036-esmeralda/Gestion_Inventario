@@ -1,43 +1,62 @@
+
+from MODULO_GESTION_PROVEEDORES import validar_codigo, validar_texto_no_vacio
+
+
 def validar_numero_entero_positivo(mensaje):
        while True:
-          try:
-             valor= int(input(mensaje))
-             if valor< 0:
-                print("Error: no puede ser negativo")
-             else:
-                return valor
-          except:
-             print("Error: debe ingresar un numero valido" )
+          valor = input(mensaje).strip()
+
+          if valor == "":
+                print("Error: no puede estar vacio")
+
+          else: 
+              try:
+                valor= int(valor)
+                if valor< 0:
+                 print("Error: no puede ser negativo")
+
+                else:
+                 return valor
+                
+              except ValueError:
+               print("Error: debe ingresar un numero valido" )
 
 
 def validar_numero_decimal_positivo(mensaje):
        while True:
-          try:
-             valor= float(input(mensaje))
-             if valor< 0:
-                print("Error: no puede ser negativo")
-             else:
-                return valor
-          except:
-             print("Error: debe ingresar un numero valido" )                   
+            valor = input(mensaje).strip()
+
+            if valor == "":
+                print("Error: no puede estar vacio")
+                   
+
+            else:
+                try:
+                 valor= float(valor)
+                 if valor< 0:
+                    print("Error: no puede ser negativo")
+                 else:
+                    return valor
+                except ValueError:
+                  print("Error: debe ingresar un numero valido" )                   
 
 
 
 
 def ingresar_producto(inventario,proveedores):
 
-    codigo = input("Ingrese codigo del producto: ")
+    codigo = validar_codigo("Ingrese codigo del producto: ")
     if codigo in inventario:
         print ("Error : Ya existe un producto con ese codigo " )
         return 
     
-    nombre= input("Ingrese el nombre del producto: ")
+    nombre= validar_texto_no_vacio("Ingrese el nombre del producto: ")
        
     precio= validar_numero_decimal_positivo("Ingrese el precio del producto: ") 
     
     stock= validar_numero_entero_positivo("Ingrese la cantidad de producto en bodega: ") 
 
-    codigo_proveedor = input(
+    codigo_proveedor = validar_codigo(
     "Ingrese codigo del proveedor: "
 )
 
@@ -83,7 +102,7 @@ def mostrar_productos(inventario):
            
 
 def buscar_producto(inventario):      
-    codigo=input("Ingrese el codigo del producto que desea buscar: ")
+    codigo=validar_codigo("Ingrese el codigo del producto que desea buscar: ")
     producto= inventario.get(codigo)
 
     if producto:
@@ -96,7 +115,7 @@ def buscar_producto(inventario):
 
 def editar_informacion_producto(inventario):
     
-    codigo= input("Ingrese el codigo del producto que desea modificar: ")
+    codigo= validar_codigo("Ingrese el codigo del producto que desea modificar: ")
 
     if codigo in inventario:
          print("¿Qué desea modificar?")
@@ -134,7 +153,7 @@ def editar_informacion_producto(inventario):
 
 def eliminar_producto(inventario):
     print("eliminar producto")
-    codigo=input("Ingrese el codigo del producto que desea eliminar: ")
+    codigo=validar_codigo("Ingrese el codigo del producto que desea eliminar: ")
     if codigo in inventario:
         del inventario[codigo]
         print("---------producto eliminado con exito---------")
@@ -201,13 +220,13 @@ if __name__ == "__main__":
 
         "PR001": {
             "nombre": "TechSupply",
-            "telefono": "7777-7777",
+            "telefono": "77777777",
             "direccion": "San Salvador"
         },
 
         "PR002": {
             "nombre": "OfficeMarket",
-            "telefono": "8888-8888",
+            "telefono": "88888888",
             "direccion": "Santa Ana"
         }
 
