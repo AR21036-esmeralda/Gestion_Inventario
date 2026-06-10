@@ -1,0 +1,198 @@
+# sistema_inventario.py
+
+# Usamos un diccionario como "base de datos" en memoria
+# Cada producto se guarda con su ID como clave
+inventario = {}
+contador_id = 1  # Para asignar IDs automáticos
+
+def menu_principal():
+    """Muestra el menú principal y pide una opción"""
+    print("\n" + "="*40)
+    print("      SISTEMA DE GESTIÓN DE INVENTARIO")
+    print("="*40)
+    print("1. Agregar producto")
+    print("2. Ver todos los productos")
+    print("3. Actualizar stock")
+    print("4. Buscar producto")
+    print("5. Eliminar producto")
+    print("6. Salir")
+    print("-"*40)
+    return input("Selecciona una opción (1-6): ")
+
+def agregar_producto():
+    """Agrega un nuevo producto al inventario"""
+    global contador_id  # Necesario para modificar la variable global
+    
+    print("\n--- NUEVO PRODUCTO ---")
+    nombre = input("Nombre del producto: ").strip().upper()
+    
+    # Validar que el nombre no esté vacío
+    if not nombre:
+        print("❌ El nombre no puede estar vacío")
+        return
+    
+    # Validar cantidad
+    try:
+        cantidad = int(input("Cantidad inicial: "))
+        if cantidad < 0:
+            print("❌ La cantidad no puede ser negativa")
+            return
+    except ValueError:
+        print("❌ La cantidad debe ser un número entero")
+        return
+    
+    # Validar precio
+    try:
+        precio = float(input("Precio unitario: $"))
+        if precio < 0:
+            print("❌ El precio no puede ser negativo")
+            return
+    except ValueError:
+        print("❌ El precio debe ser un número")
+        return
+    
+    # Guardar el producto
+    inventario[contador_id] = {
+        'nombre': nombre,
+        'cantidad': cantidad,
+        'precio': precio
+    }
+    
+    print(f"✅ Producto '{nombre}' agregado con ID: {contador_id}")
+    contador_id += 1
+
+def ver_inventario():
+    """Muestra todos los productos del inventario"""
+    if not inventario:
+        print("\n📭 El inventario está vacío")
+        return
+    
+    print("\n" + "="*60)
+    print(f"{'ID':<5} {'PRODUCTO':<25} {'CANTIDAD':<10} {'PRECIO':<10} {'TOTAL':<10}")
+    print("-"*60)
+    
+    for id_producto, datos in inventario.items():
+        total = datos['cantidad'] * datos['precio']
+        print(f"{id_producto:<5} {datos['nombre']:<25} {datos['cantidad']:<10} ${datos['precio']:<9.2f} ${total:<9.2f}")
+    
+    print("-"*60)
+    # Calcular valor total del inventario
+    valor_total = sum(d['cantidad'] * d['precio'] for d in inventario.values())
+    print(f"💰 VALOR TOTAL DEL INVENTARIO: ${valor_total:.2f}")
+
+def actualizar_stock():
+    """Actualiza la cantidad de un producto (entrada o salida)"""
+    if not inventario:
+        print("\n📭 No hay productos para actualizar")
+        return
+    
+    ver_inventario()  # Mostrar productos disponibles
+    
+    try:
+        id_producto = int(input("\nID del producto a actualizar: "))
+        if id_producto not in inventario:
+            print(f"❌ No existe producto con ID {id_producto}")
+            return
+        
+        print(f"Producto actual: {inventario[id_producto]['nombre']}")
+        print(f"Stock actual: {inventario[id_producto]['cantidad']}")
+        
+        print("\n1. Entrada de stock (agregar)")
+        print("2. Salida de stock (retirar)")
+        opcion = input("Selecciona tipo de movimiento: ")
+        
+        try:
+            cantidad = int(input("Cantidad: "))
+            if cantidad <= 0:
+                print("❌ La cantidad debe ser mayor a cero")
+                return
+        except ValueError:
+            print("❌ Cantidad no válida")
+            return
+        
+        if opcion == "1":  # Entrada
+            inventario[id_producto]['cantidad'] += cantidad
+            print(f"✅ Entrada registrada. Nuevo stock: {inventario[id_producto]['cantidad']}")
+        elif opcion == "2":  # Salida
+            if cantidad > inventario[id_producto]['cantidad']:
+                print(f"❌ Stock insuficiente. Solo hay {inventario[id_producto]['cantidad']} unidades")
+            else:
+                inventario[id_producto]['cantidad'] -= cantidad
+                print(f"✅ Salida registrada. Nuevo stock: {inventario[id_producto]['cantidad']}")
+        else:
+            print("❌ Opción no válida")
+            
+    except ValueError:
+        print("❌ El ID debe ser un número")
+
+def buscar_producto():
+    """Busca productos por nombre (búsqueda parcial)"""
+    if not inventario:
+        print("\n📭 El inventario está vacío")
+        return
+    
+    busqueda = input("\n🔍 Nombre del producto a buscar: ").strip().upper()
+    resultados = []
+    
+    for id_producto, datos in inventario.items():
+        if busqueda in datos['nombre']:
+            resultados.append((id_producto, datos))
+    
+    if resultados:
+        print(f"\n📋 Resultados para '{busqueda}':")
+        print("-"*50)
+        for id_producto, datos in resultados:
+            print(f"ID: {id_producto} | {datos['nombre']} | Stock: {datos['cantidad']} | Precio: ${datos['precio']:.2f}")
+    else:
+        print(f"❌ No se encontraron productos con '{busqueda}'")
+
+def eliminar_producto():
+    """Elimina un producto del inventario"""
+    if not inventario:
+        print("\n📭 El inventario está vacío")
+        return
+    
+    ver_inventario()
+    
+    try:
+        id_producto = int(input("\nID del producto a eliminar: "))
+        if id_producto in inventario:
+            confirmacion = input(f"¿Eliminar '{inventario[id_producto]['nombre']}'? (s/n): ").lower()
+            if confirmacion == 's':
+                del inventario[id_producto]
+                print(f"✅ Producto eliminado")
+            else:
+                print("❌ Eliminación cancelada")
+        else:
+            print(f"❌ No existe producto con ID {id_producto}")
+    except ValueError:
+        print("❌ El ID debe ser un número")
+
+# ========== PROGRAMA PRINCIPAL ==========
+def main():
+    print("🐍 ¡Bienvenido a tu Sistema de Inventario en Python!")
+    
+    while True:
+        opcion = menu_principal()
+        
+        if opcion == "1":
+            agregar_producto()
+        elif opcion == "2":
+            ver_inventario()
+        elif opcion == "3":
+            actualizar_stock()
+        elif opcion == "4":
+            buscar_producto()
+        elif opcion == "5":
+            eliminar_producto()
+        elif opcion == "6":
+            print("\n👋 ¡Hasta luego!")
+            break
+        else:
+            print("❌ Opción no válida. Elige 1-6")
+        
+        input("\nPresiona Enter para continuar...")  # Pausa antes de volver al menú
+
+# Punto de entrada del programa
+if __name__ == "__main__":
+    main()
