@@ -10,17 +10,49 @@ def validar_texto_no_vacio(mensaje):
             return texto
 
 
+def validar_telefono (mensaje):
+
+     while True:
+
+        telefono = input(mensaje).strip()
+
+        if telefono == "":
+            print("Error: el telefono no puede estar vacio ")
+
+        elif telefono.isdigit():
+          return telefono
+     
+        else:
+            print("Error: debe ingresar solo numeros")    
+
+
+
+def validar_codigo(mensaje):
+
+    while True:
+        codigo = input(mensaje).strip()
+
+        if codigo == "":
+            print("Error: el codigo no puede estar vacio")
+
+        elif codigo.isalnum():
+            return  codigo.upper()
+        
+        else:
+            print("Error: el codigo solo puede contener letras o numeros.")
+
+
 
 def registrar_proveedor(proveedores):
 
-    codigo_proveedor = validar_texto_no_vacio("Ingrese codigo del proveedor: ")
+    codigo_proveedor = validar_codigo("Ingrese codigo del proveedor: ")
     if codigo_proveedor in proveedores:
         print ("Error : Ya existe un proveedor con ese codigo " )
         return 
     
     nombre_proveedor= validar_texto_no_vacio("Ingrese el nombre del proveedor: ")
        
-    telefono_proveedor= validar_texto_no_vacio("Ingrese el telefono del proveedor: ") 
+    telefono_proveedor= validar_telefono("Ingrese el telefono del proveedor: ") 
     
     direccion_proveedor= validar_texto_no_vacio("Ingrese la  direccion del proveedor: ") 
      
@@ -58,7 +90,7 @@ def mostrar_proveedores(proveedores):
 
 
 def buscar_proveedor(proveedores):      
-    codigo_proveedor=input("Ingrese el codigo del proveedor que desea buscar: ")
+    codigo_proveedor=validar_codigo("Ingrese el codigo del proveedor que desea buscar: ")
     proveedor = proveedores.get(codigo_proveedor)
 
     if proveedor:
@@ -71,7 +103,7 @@ def buscar_proveedor(proveedores):
 
 def editar_informacion_proveedor(proveedores):
     
-    codigo_proveedor= input("Ingrese el codigo del proveedor que desea modificar: ")
+    codigo_proveedor= validar_codigo("Ingrese el codigo del proveedor que desea modificar: ")
 
     if codigo_proveedor in proveedores:
          print("¿Qué desea modificar?")
@@ -82,7 +114,7 @@ def editar_informacion_proveedor(proveedores):
 
          match opcion :
              case "1" :
-                 nuevo_numero_telefono = validar_texto_no_vacio("Nuevo telefono: ")
+                 nuevo_numero_telefono = validar_telefono("Nuevo telefono: ")
                  proveedores[codigo_proveedor]["telefono"] = nuevo_numero_telefono
                  print("---telefono actualizado con exito---")
 
@@ -92,7 +124,7 @@ def editar_informacion_proveedor(proveedores):
                  print("-----direccion actualizada con exito-----")
 
              case "3":
-                 nuevo_numero_telefono = validar_texto_no_vacio("Nuevo telefono: ") 
+                 nuevo_numero_telefono = validar_telefono("Nuevo telefono: ") 
                  nueva_direccion = validar_texto_no_vacio ("Nueva direccion: ")  
 
                  proveedores[codigo_proveedor]["telefono"] = nuevo_numero_telefono
@@ -109,7 +141,7 @@ def editar_informacion_proveedor(proveedores):
 
 def eliminar_proveedor(proveedores):
     print("eliminar proveedor")
-    codigo_proveedor=input("Ingrese el codigo del proveedor que desea eliminar: ")
+    codigo_proveedor=validar_codigo("Ingrese el codigo del proveedor que desea eliminar: ")
     if codigo_proveedor in proveedores:
         del proveedores[codigo_proveedor]
         print("---------proveedor eliminado con exito---------")
