@@ -1,0 +1,105 @@
+# MODULODEGESTIONDEINVENTARIO.py
+from datetime import datetime
+
+# ========== FUNCIONES PRINCIPALES ==========
+def registrar_entrada(inventario, movimientos, codigo, cantidad):
+    """Registra una entrada de mercancía"""
+    if codigo not in inventario:
+        raise ValueError(f"El producto con codigo {codigo} no existe")
+    if cantidad <= 0:
+        raise ValueError("La cantidad debe ser positiva")
+    
+    inventario[codigo]['stock'] += cantidad
+    
+    movimiento = {
+        'fecha': datetime.now().isoformat(),
+        'tipo': 'entrada',
+        'codigo': codigo,
+        'producto': inventario[codigo]['nombre'],
+        'cantidad': cantidad
+    }
+    movimientos.append(movimiento)
+    return movimiento
+
+
+def registrar_salida(inventario, movimientos, codigo, cantidad):
+    """Registra una salida de mercancía"""
+    if codigo not in inventario:
+        raise ValueError(f"El producto con codigo {codigo} no existe")
+    if cantidad <= 0:
+        raise ValueError("La cantidad debe ser positiva")
+    if inventario[codigo]['stock'] < cantidad:
+        raise ValueError(f"Stock insuficiente. Stock actual: {inventario[codigo]['stock']}")
+    
+    inventario[codigo]['stock'] -= cantidad
+    
+    movimiento = {
+        'fecha': datetime.now().isoformat(),
+        'tipo': 'salida',
+        'codigo': codigo,
+        'producto': inventario[codigo]['nombre'],
+        'cantidad': cantidad
+    }
+    movimientos.append(movimiento)
+    return movimiento
+
+
+def agregar_producto(inventario, codigo, nombre, stock_inicial=0):
+    """Agrega un nuevo producto al inventario"""
+    if codigo in inventario:
+        raise ValueError(f"El producto con codigo {codigo} ya existe")
+    
+    inventario[codigo] = {
+        'nombre': nombre,
+        'stock': stock_inicial
+    }
+    return inventario[codigo]
+
+
+def ver_stock(inventario):
+    """Muestra el stock actual de todos los productos"""
+    print("\n=== STOCK ACTUAL ===")
+    for codigo, datos in inventario.items():
+        print(f"Código: {codigo} | Producto: {datos['nombre']} | Stock: {datos['stock']}")
+
+
+def ver_movimientos(movimientos, limite=None):
+    """Muestra el historial de movimientos"""
+    print("\n=== HISTORIAL DE MOVIMIENTOS ===")
+    lista = movimientos if limite is None else movimientos[-limite:]
+    for mov in lista:
+        print(f"{mov['fecha']} | {mov['tipo']} | {mov['producto']} | Cantidad: {mov['cantidad']}")
+
+
+# ========== EJEMPLO DE USO ==========
+if __name__ == "__main__":
+    # Inicializar datos
+    inventario = {}
+    movimientos = []
+    
+    # Agregar productos
+    agregar_producto(inventario, "001", "Laptop", 10)
+    agregar_producto(inventario, "002", "Mouse", 20)
+    agregar_producto(inventario, "003", "Teclado", 5)
+    
+    # Ver stock inicial
+    ver_stock(inventario)
+    
+    # Registrar movimientos
+    print("\n--- Registrando entrada ---")
+    registrar_entrada(inventario, movimientos, "001", 5)
+    
+    print("\n--- Registrando salida ---")
+    registrar_salida(inventario, movimientos, "002", 3)
+    
+    # Ver stock actualizado
+    ver_stock(inventario)
+    
+    # Ver historial
+    ver_movimientos(movimientos)
+    
+    # Intentar salida sin stock (esto dará error)
+    try:
+        registrar_salida(inventario, movimientos, "003", 10)
+    except ValueError as e:
+        print(f"\nError esperado: {e}")
