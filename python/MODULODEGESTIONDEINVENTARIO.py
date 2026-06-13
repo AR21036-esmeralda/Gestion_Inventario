@@ -1,13 +1,26 @@
 
-# movimientos.py - Gestión de inventario con menú
-from datetime import datetime
-import os
+# MODULO_GESTION_MOVIMIENTOS.py
 
-# ========== FUNCIONES ==========
-def registrar_entrada(inventario, movimientos, codigo, cantidad):
+def validar_codigo(mensaje):
+    """Valida que el código no esté vacío"""
+    while True:
+        codigo = input(mensaje).strip().upper()
+        if codigo:
+            return codigo
+        print("El código no puede estar vacío")
+
+
+# movimientos.py
+
+from datetime import datetime
+
+# ========== FUNCIONES PRINCIPALES ==========
+
+def registrar_entrada(inventario, movimientos, codigo, cantidad, motivo, proveedor=None):
     """Registra una entrada de mercancía"""
     if codigo not in inventario:
-        raise ValueError(f"El producto con código {codigo} no existe")
+        raise ValueError(f"El producto con codigo {codigo} no existe")
+    
     if cantidad <= 0:
         raise ValueError("La cantidad debe ser positiva")
     
@@ -18,21 +31,25 @@ def registrar_entrada(inventario, movimientos, codigo, cantidad):
         'tipo': 'entrada',
         'codigo': codigo,
         'producto': inventario[codigo]['nombre'],
-        'cantidad': cantidad
+        'cantidad': cantidad,
+        'motivo': motivo,
+        'proveedor': proveedor if motivo == 'compra' else None,
+        'stock_resultante': inventario[codigo]['stock']
     }
     movimientos.append(movimiento)
-    print(f"✓ Entrada registrada: +{cantidad} {inventario[codigo]['nombre']}")
-    return movimiento
+    print(f"[OK] Entrada registrada. Nuevo stock de {inventario[codigo]['nombre']}: {inventario[codigo]['stock']}")
 
 
-def registrar_salida(inventario, movimientos, codigo, cantidad):
+def registrar_salida(inventario, movimientos, codigo, cantidad, motivo, destino=None):
     """Registra una salida de mercancía"""
     if codigo not in inventario:
-        raise ValueError(f"El producto con código {codigo} no existe")
+        raise ValueError(f"El producto con codigo {codigo} no existe")
+    
     if cantidad <= 0:
         raise ValueError("La cantidad debe ser positiva")
+    
     if inventario[codigo]['stock'] < cantidad:
-        raise ValueError(f"Stock insuficiente. Stock actual: {inventario[codigo]['stock']}")
+        raise ValueError(f"Stock insuficiente. Disponible: {inventario[codigo]['stock']}")
     
     inventario[codigo]['stock'] -= cantidad
     
@@ -41,145 +58,211 @@ def registrar_salida(inventario, movimientos, codigo, cantidad):
         'tipo': 'salida',
         'codigo': codigo,
         'producto': inventario[codigo]['nombre'],
-        'cantidad': cantidad
+        'cantidad': cantidad,
+        'motivo': motivo,
+        'destino': destino if motivo == 'venta' else None,
+        'stock_resultante': inventario[codigo]['stock']
     }
     movimientos.append(movimiento)
-    print(f"✓ Salida registrada: -{cantidad} {inventario[codigo]['nombre']}")
-    return movimiento
+    print(f"[OK] Salida registrada. Nuevo stock de {inventario[codigo]['nombre']}: {inventario[codigo]['stock']}")
 
 
-def agregar_producto(inventario, codigo, nombre, stock_inicial=0):
-    """Agrega un nuevo producto al inventario"""
-    if codigo in inventario:
-        raise ValueError(f"El producto con código {codigo} ya existe")
-    
-    inventario[codigo] = {
-        'nombre': nombre,
-        'stock': stock_inicial
-    }
-    print(f"✓ Producto '{nombre}' agregado con stock: {stock_inicial}")
-    return inventario[codigo]
+def consultar_stock(inventario, codigo=None):
+    """Consulta stock de un producto o de todos"""
+    if codigo:
+        if codigo not in inventario:
+            print(f"[ERROR] Producto {codigo} no encontrado")
+            return
+        prod = inventario[codigo]
+        print(f"\n[PRODUCTO] {prod['nombre']} (Codigo: {codigo})")
+        print(f"   Stock: {prod['stock']} | Precio: ${prod.get('precio', 0)}")
+    else:
+        print("\n[LISTA COMPLETA DE PRODUCTOS]")
+        print("-" * 50)
+        for cod, prod in inventario.items():
+            print(f"{cod} | {prod['nombre']:20} | Stock: {prod['stock']:4} | ${prod.get('precio', 0)}")
+        print("-" * 50)
 
 
-def ver_stock(inventario):
-    """Muestra el stock actual"""
-    if not inventario:
-        print(" No hay productos registrados")
-        return
-    
-    print("\n" + "="*50)
-    print("           STOCK ACTUAL")
-    print("="*50)
-    for codigo, datos in inventario.items():
-        print(f"  {codigo} | {datos['nombre']} | Stock: {datos['stock']}")
-    print("="*50)
-
-
-def ver_movimientos(movimientos):
-    """Muestra el historial"""
+def ver_movimientos(movimientos, filtro=None):
+    """Muestra el historial de movimientos"""
     if not movimientos:
-        print(" No hay movimientos registrados")
+        print("\n[INFO] No hay movimientos registrados")
         return
     
-    print("\n" + "="*65)
-    print("           HISTORIAL DE MOVIMIENTOS")
-    print("="*65)
-    for mov in movimientos:
-        print(f"  {mov['fecha'][:19]} | {mov['tipo']:^6} | {mov['producto']} | ±{mov['cantidad']}")
-    print("="*65)
-
-
-def limpiar_pantalla():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-
-# ========== MENU ==========
-def menu():
-    print("\n" + "="*40)
-    print("   GESTIÓN DE MOVIMIENTOS DE INVENTARIO")
-    print("="*40)
-    print("  1. Agregar producto")
-    print("  2. Registrar entrada")
-    print("  3. Registrar salida")
-    print("  4. Ver stock")
-    print("  5. Ver movimientos")
-    print("  6. Salir")
-    print("="*40)
-
-
-# ========== MAIN ==========
-def main():
-    inventario = {}
-    movimientos = []
+    if filtro:
+        movimientos_filtrados = [m for m in movimientos if m['codigo'] == filtro]
+        if not movimientos_filtrados:
+            print(f"\n[ERROR] No hay movimientos para el producto {filtro}")
+            return
+        mostrar = movimientos_filtrados
+        print(f"\n[MOVIMIENTOS DEL PRODUCTO {filtro}]")
+    else:
+        mostrar = movimientos
+        print("\n[HISTORIAL COMPLETO DE MOVIMIENTOS]")
     
-    # Productos de ejemplo
-    agregar_producto(inventario, "001", "Laptop", 10)
-    agregar_producto(inventario, "002", "Mouse", 20)
-    agregar_producto(inventario, "003", "Teclado", 5)
+    print("=" * 90)
+    for m in mostrar:
+        print(f"{m['fecha'][:19]} | {m['tipo'].upper():6} | "
+              f"{m['codigo']} - {m['producto'][:20]:20} | "
+              f"Cant: {m['cantidad']:4} | Motivo: {m['motivo']:15} | "
+              f"Stock final: {m['stock_resultante']}")
+    print("=" * 90)
+
+
+def stock_valorizado(inventario):
+    """Calcula el valor total del inventario"""
+    total = 0
+    for datos in inventario.values():
+        total += datos['stock'] * datos.get('precio', 0)
+    return total
+
+
+def mostrar_resumen(inventario, movimientos):
+    """Muestra un resumen general"""
+    print("\n" + "=" * 50)
+    print("[RESUMEN DE INVENTARIO]")
+    print("=" * 50)
+    print(f"Total de productos: {len(inventario)}")
+    print(f"Total de movimientos: {len(movimientos)}")
     
+    entradas = len([m for m in movimientos if m['tipo'] == 'entrada'])
+    salidas = len([m for m in movimientos if m['tipo'] == 'salida'])
+    print(f"Entradas: {entradas} | Salidas: {salidas}")
+    
+    valor_total = stock_valorizado(inventario)
+    print(f"Valor total del inventario: ${valor_total:.2f}")
+    
+    # Productos con bajo stock (menos de 5)
+    bajo_stock = [(cod, d['nombre'], d['stock']) for cod, d in inventario.items() if d['stock'] < 5]
+    if bajo_stock:
+        print("\n[ALERTA] PRODUCTOS CON BAJO STOCK (<5 unidades):")
+        for cod, nombre, stock in bajo_stock:
+            print(f"   {cod} - {nombre}: {stock} unidades")
+    print("=" * 50)
+
+
+# ========== FUNCION MENU ==========
+
+def menu_movimientos(inventario, movimientos):
+    """
+    Menu interactivo para gestion de movimientos
+    Recibe los diccionarios del main y trabaja directamente sobre ellos
+    """
     while True:
-        menu()
-        opcion = input("\nSeleccione opción (1-6): ").strip()
+        print("\n" + "=" * 50)
+        print("SISTEMA DE MOVIMIENTOS DE INVENTARIO")
+        print("=" * 50)
+        print("1. Registrar ENTRADA de mercancia")
+        print("2. Registrar SALIDA de mercancia")
+        print("3. Consultar stock de un producto")
+        print("4. Ver listado completo de productos")
+        print("5. Ver historial de movimientos")
+        print("6. Ver movimientos de un producto especifico")
+        print("7. Ver resumen general")
+        print("8. Salir del menu de movimientos")
+        print("=" * 50)
         
+        opcion = input("\nSeleccione una opcion: ").strip()
+        
+        # Opcion 1: Registrar entrada
         if opcion == "1":
-            limpiar_pantalla()
-            print("\n--- AGREGAR PRODUCTO ---")
-            codigo = input("Código: ").strip()
-            nombre = input("Nombre: ").strip()
-            try:
-                stock = float(input("Stock inicial (0): ") or 0)
-                agregar_producto(inventario, codigo, nombre, stock)
-            except ValueError as e:
-                print(f" Error: {e}")
-            input("\nPresione Enter...")
-            limpiar_pantalla()
-            
-        elif opcion == "2":
-            limpiar_pantalla()
             print("\n--- REGISTRAR ENTRADA ---")
-            codigo = input("Código del producto: ").strip()
-            try:
-                cantidad = float(input("Cantidad a ingresar: "))
-                registrar_entrada(inventario, movimientos, codigo, cantidad)
-            except ValueError as e:
-                print(f" Error: {e}")
-            input("\nPresione Enter...")
-            limpiar_pantalla()
+            codigo = input("Codigo del producto: ").strip().upper()
+            if codigo not in inventario:
+                print(f"[ERROR] Producto {codigo} no existe. Registrelo primero en productos.")
+                continue
             
-        elif opcion == "3":
-            limpiar_pantalla()
+            try:
+                cantidad = int(input("Cantidad: "))
+                print("Motivos disponibles: compra, devolucion_cliente, ajuste")
+                motivo = input("Motivo: ").strip().lower()
+                if motivo not in ['compra', 'devolucion_cliente', 'ajuste']:
+                    print("[ERROR] Motivo no valido. Usando 'ajuste' por defecto")
+                    motivo = 'ajuste'
+                
+                proveedor = None
+                if motivo == 'compra':
+                    proveedor = input("Proveedor (opcional): ").strip() or None
+                
+                registrar_entrada(inventario, movimientos, codigo, cantidad, motivo, proveedor)
+            except ValueError as e:
+                print(f"[ERROR] {e}")
+        
+        # Opcion 2: Registrar salida
+        elif opcion == "2":
             print("\n--- REGISTRAR SALIDA ---")
-            codigo = input("Código del producto: ").strip()
+            codigo = input("Codigo del producto: ").strip().upper()
+            if codigo not in inventario:
+                print(f"[ERROR] Producto {codigo} no existe")
+                continue
+            
             try:
-                cantidad = float(input("Cantidad a retirar: "))
-                registrar_salida(inventario, movimientos, codigo, cantidad)
+                cantidad = int(input("Cantidad: "))
+                print("Motivos disponibles: venta, devolucion_proveedor, merma, ajuste")
+                motivo = input("Motivo: ").strip().lower()
+                if motivo not in ['venta', 'devolucion_proveedor', 'merma', 'ajuste']:
+                    print("[ERROR] Motivo no valido. Usando 'venta' por defecto")
+                    motivo = 'venta'
+                
+                destino = None
+                if motivo == 'venta':
+                    destino = input("Destino/cliente (opcional): ").strip() or None
+                
+                registrar_salida(inventario, movimientos, codigo, cantidad, motivo, destino)
             except ValueError as e:
-                print(f"Error: {e}")
-            input("\nPresione Enter...")
-            limpiar_pantalla()
-            
+                print(f"[ERROR] {e}")
+        
+        # Opcion 3: Consultar stock de un producto
+        elif opcion == "3":
+            codigo = input("\nCodigo del producto: ").strip().upper()
+            consultar_stock(inventario, codigo)
+        
+        # Opcion 4: Ver listado completo
         elif opcion == "4":
-            limpiar_pantalla()
-            ver_stock(inventario)
-            input("\nPresione Enter...")
-            limpiar_pantalla()
-            
+            consultar_stock(inventario)
+        
+        # Opcion 5: Ver historial completo
         elif opcion == "5":
-            limpiar_pantalla()
             ver_movimientos(movimientos)
-            input("\nPresione Enter...")
-            limpiar_pantalla()
-            
+        
+        # Opcion 6: Ver movimientos de un producto
         elif opcion == "6":
-            limpiar_pantalla()
-            print("\n¡Hasta luego!")
+            codigo = input("\nCodigo del producto: ").strip().upper()
+            ver_movimientos(movimientos, codigo)
+        
+        # Opcion 7: Resumen general
+        elif opcion == "7":
+            mostrar_resumen(inventario, movimientos)
+        
+        # Opcion 8: Salir
+        elif opcion == "8":
+            print("\n[SALIDA] Saliendo del menu de movimientos...")
             break
-            
+        
         else:
-            print("Opción inválida")
-            input("\nPresione Enter...")
-            limpiar_pantalla()
+            print("[ERROR] Opcion no valida. Intente de nuevo.")
+        
+        input("\nPresione Enter para continuar...")
 
+
+# ========== EJEMPLO DE USO CON MAIN ==========
 
 if __name__ == "__main__":
-    main()
+    # Estructuras de datos compatibles con el proyecto
+    inventario = {
+        '001': {'nombre': 'Laptop Gamer', 'stock': 10, 'precio': 850.00},
+        '002': {'nombre': 'Mouse RGB', 'stock': 50, 'precio': 25.50},
+        '003': {'nombre': 'Teclado Mecanico', 'stock': 15, 'precio': 65.00},
+        '004': {'nombre': 'Monitor 24"', 'stock': 5, 'precio': 180.00},
+    }
+    
+    movimientos = []  # Lista para el historial
+    
+    # Iniciar el menu
+    menu_movimientos(inventario, movimientos)
+    
+    # Al salir, muestra el estado final
+    print("\n" + "=" * 50)
+    print("ESTADO FINAL DEL SISTEMA")
+    mostrar_resumen(inventario, movimientos)
