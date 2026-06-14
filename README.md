@@ -1,69 +1,225 @@
 # Gestión de Inventario - Grupo 1
 
-# Descripción del Proyecto
-Este sistema CLI desarrollado en Python permite la administración integral de un catálogo de productos y sus proveedores. El objetivo es automatizar el registro de entradas y salidas de stock, garantizando la integridad de los datos y evitando existencias negativas.
+## Descripción
 
+Este proyecto consiste en un sistema de gestión de inventario desarrollado en Python. El sistema permite administrar proveedores, productos y movimientos de inventario mediante menús interactivos en consola.
 
-## Entrega #1 - Pseudocódigo
+## Objetivo
 
-# Funcionalidades Principales 
-**Módulo de Gestión de Productos:** Registro, consulta y actualización de la información base de los productos.
-**Módulo de Movimientos de Inventario:** Control de entradas y salidas de stock con validación de stock.
-**Integración de Datos:** Lógica para mantener la coherencia entre el catálogo y los movimientos realizados.
+Desarrollar un sistema de gestión de inventario que permita administrar proveedores, productos y movimientos de mercancía de forma organizada, aplicando estructuras de datos, modularización del código, validación de datos y pruebas unitarias para garantizar el correcto funcionamiento del sistema.
 
+## Funcionalidades
 
-## Entrega #2 – Implementación en Python
+### Gestión de Proveedores
 
-En esta fase se realizó la transición del diseño en pseudocódigo a una implementación funcional en Python, enfocándose en la estructura modular, la organización del código y la lógica CRUD. El sistema fue desarrollado como una aplicación CLI (interfaz por consola), permitiendo la interacción del usuario mediante menús y posteriormente integrando los módulos en un solo sistema.
+Permite:
 
----
+* Registrar proveedores.
+* Mostrar la lista de proveedores registrados.
+* Buscar proveedores por código.
+* Modificar teléfono o dirección de un proveedor.
+* Eliminar proveedores.
 
-## Módulo de Gestión de Proveedores
+### Gestión de Productos
 
-Este módulo permite administrar la información de los proveedores del sistema, quienes son necesarios para la correcta gestión de los productos.
+Permite:
 
-### Funcionalidades:
-- Registrar proveedores  
-- Mostrar lista de proveedores registrados  
-- Buscar proveedores por código  
-- Actualizar información de proveedores (teléfono y dirección)  
-- Eliminar proveedores  
+* Registrar productos.
+* Asociar productos a proveedores existentes.
+* Mostrar productos registrados.
+* Buscar productos por código.
+* Modificar nombre, precio o proveedor de un producto.
+* Eliminar productos.
 
----
+### Movimientos de Inventario
 
-## Módulo de Gestión de Productos
+Permite:
 
-Este módulo permite administrar el catálogo de productos del sistema, asegurando el control de inventario y la relación con proveedores.
+* Registrar entradas de mercancía.
+* Registrar salidas de mercancía.
+* Consultar el stock de un producto.
+* Ver el listado completo de productos.
+* Consultar el historial de movimientos.
+* Mostrar un resumen general del inventario.
+* Calcular el valor total del inventario.
 
-### Funcionalidades:
-- Registrar productos asociados a un proveedor  
-- Mostrar lista de productos registrados  
-- Buscar productos por código  
-- Actualizar información de productos (precio y stock)  
-- Eliminar productos  
+## Estructura del Proyecto
 
-### Relación entre módulos:
-Para registrar un producto es obligatorio que el proveedor exista previamente en el sistema, garantizando la integridad de los datos y la correcta asociación entre entidades.
+```text
+python/
+│
+├── main.py
+├── MODULO_GESTION_PRODUCTOS.py
+├── MODULO_GESTION_PROVEEDORES.py
+├── MODULO_MOVIMIENTOS_INVENTARIO.py
+└── test_modulo_movimientos_inventario.py
+```
 
----
+## Obtención del Proyecto
 
-## Integración del Sistema
+Existen dos formas de obtener una copia del repositorio desde GitHub.
 
-Los módulos de productos y proveedores fueron desarrollados en archivos independientes y posteriormente integrados en una sola aplicación CLI. Esto permite que ambos módulos funcionen dentro de un menú principal, facilitando la gestión completa del sistema de inventario.
+### Opción 1: Descargar como archivo ZIP
 
----
+1. Ingresar al repositorio en GitHub.
+2. Hacer clic en el botón **Code**.
+3. Seleccionar **Download ZIP**.
+4. Extraer el archivo descargado en una carpeta de su computadora.
+
+### Opción 2: Clonar el repositorio
+
+Si tiene Git instalado, puede clonar el repositorio utilizando el siguiente comando:
+
+```bash
+git clone URL_DEL_REPOSITORIO
+```
+
+## Requisitos
+
+Para ejecutar este proyecto es necesario tener instalado:
+
+* Python 3.10 o superior.
+* Pytest (para ejecutar las pruebas unitarias).
+
+### Instalación de Python
+
+1. Descargar Python desde el sitio oficial:
+
+https://www.python.org/downloads/
+
+2. Ejecutar el instalador.
+3. Durante la instalación, marcar la opción:
+
+```text
+Add Python to PATH
+```
+
+4. Finalizar la instalación.
+5. Verificar que Python se instaló correctamente ejecutando:
+
+```bash
+python --version
+```
+
+Si la instalación fue exitosa, se mostrará la versión instalada de Python.
+
+### Instalación de Pytest
+
+Una vez instalado Python, abrir una terminal y ejecutar:
+
+```bash
+pip install pytest
+```
+
+Para verificar la instalación:
+
+```bash
+pytest --version
+```
+
+## Ejecución del Programa
+
+### Desde Visual Studio Code
+
+1. Abrir Visual Studio Code.
+2. Seleccionar **File → Open Folder...**.
+3. Buscar la carpeta descargada del proyecto llamada **Gestion_Inventario** y abrirla.
+4. En el panel lateral izquierdo, abrir la carpeta **python**.
+5. Localizar y abrir el archivo **main.py**.
+6. Presionar el botón **Run Python File** ubicado en la parte superior derecha.
+
+También puede hacer clic derecho sobre el archivo **main.py** y seleccionar:
+
+```text
+Run Python File in Terminal
+```
+
+7. El sistema iniciará mostrando el menú principal.
+
+## Ejemplo de Uso
+
+### Registrar un proveedor
+
+1. Seleccionar **Gestión de proveedores**.
+2. Elegir **Registrar proveedor**.
+3. Ingresar:
+
+   * Código.
+   * Nombre.
+   * Teléfono.
+   * Dirección.
+
+### Registrar un producto
+
+1. Seleccionar **Gestión de productos**.
+2. Elegir **Registrar producto**.
+3. Ingresar:
+
+   * Código del producto.
+   * Nombre.
+   * Precio.
+   * Stock inicial.
+   * Código del proveedor.
+
+### Registrar una entrada de mercancía
+
+1. Seleccionar **Movimientos de inventario**.
+2. Elegir **Registrar entrada**.
+3. Ingresar:
+
+   * Código del producto.
+   * Cantidad.
+   * Motivo (compra, devolución de cliente o ajuste).
+
+### Registrar una salida de mercancía
+
+1. Seleccionar **Movimientos de inventario**.
+2. Elegir **Registrar salida**.
+3. Ingresar:
+
+   * Código del producto.
+   * Cantidad.
+   * Motivo (venta, devolución al proveedor, merma o ajuste).
+
+## Pruebas Unitarias
+
+El proyecto incluye dos pruebas unitarias en el archivo:
+
+```text
+test_modulo_movimientos_inventario.py
+```
+
+Para ejecutar las pruebas:
+
+1. Abrir una terminal.
+2. Ubicarse en la carpeta del proyecto.
+3. Ejecutar:
+
+```bash
+pytest
+```
+
+Si las pruebas se ejecutan correctamente, se mostrará un resultado similar a:
+
+```text
+2 passed
+```
 
 ## Integrantes
-* Esmeralda Isabel Alvarez Rivas
-* Cesar Ezequiel Aguilar Peralta
-* Luis Armando Argueta Villalobos
+
+* Esmeralda Isabel Álvarez Rivas
+* César Ezequiel Aguilar Peralta
 
 ## Tecnologías Utilizadas
-- Python (implementación del sistema)
-- GitHub (control de versiones y trabajo colaborativo)
-- PSeInt (diseño inicial en pseudocódigo)
 
+* Python (implementación del sistema).
+* GitHub (control de versiones y trabajo colaborativo).
+* PSeInt (diseño inicial en pseudocódigo).
+* Pytest (pruebas unitarias).
+* Visual Studio Code (desarrollo y ejecución del proyecto).
 
+```
+```
 
 
 
