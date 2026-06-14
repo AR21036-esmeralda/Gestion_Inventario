@@ -1,8 +1,10 @@
 from MODULO_GESTION_PRODUCTOS import menu_productos
 from MODULO_GESTION_PROVEEDORES import menu_proveedores
+from MODULO_MOVIMIENTOS_INVENTARIO import menu_movimientos
 
 inventario = {}
 proveedores = {}
+movimientos = []
 
 while True:
 
@@ -12,7 +14,8 @@ while True:
 
     print("1. Gestion de proveedores")
     print("2. Gestion de productos")
-    print("3. Salir")
+    print("3. Movimientos de inventario")
+    print("4. Salir")
 
     opcion = input("Seleccione una opcion: ")
 
@@ -28,6 +31,12 @@ while True:
             )
 
         case "3":
+             menu_movimientos(
+                 inventario,
+                   movimientos
+            )    
+
+        case "4":
             print("Saliendo del sistema...")
             break
 
