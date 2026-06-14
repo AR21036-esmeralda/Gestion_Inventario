@@ -75,7 +75,7 @@ def ingresar_producto(inventario,proveedores):
        "proveedor": codigo_proveedor
     } 
 
-    print ("---------Producto Ingresado con Exito  ------")
+    print ("---------Producto Registrado con Exito  ------")
 
 
 
@@ -113,15 +113,16 @@ def buscar_producto(inventario):
 
 
 
-def editar_informacion_producto(inventario):
+def editar_informacion_producto(inventario,proveedores):
     
     codigo= validar_codigo("Ingrese el codigo del producto que desea modificar: ")
 
     if codigo in inventario:
          print("¿Qué desea modificar?")
          print("1.Modificar Precio ")
-         print("2.Modificar stock ")
-         print("3.Modificar precio y stock ")
+         print("2.Modificar nombre ")
+         print("3.Modificar proveedor ")
+         print("4.Salir")
          opcion = input("Ingrese opcion: ")
 
          match opcion :
@@ -131,18 +132,25 @@ def editar_informacion_producto(inventario):
                  print("---precio actualizado con exito---")
 
              case "2":
-                 nuevo_stock=validar_numero_entero_positivo ("Nuevo stock: ")
-                 inventario[codigo]["stock"] = nuevo_stock  
-                 print("-----stock actualizado con exito-----")
+                 nuevo_nombre=validar_texto_no_vacio ("Nuevo nombre: ")
+                 inventario[codigo]["nombre"] = nuevo_nombre  
+                 print("-----nombre actualizado con exito-----")
 
              case "3":
-                 nuevo_precio = validar_numero_decimal_positivo("Nuevo precio: ") 
-                 nuevo_stock = validar_numero_entero_positivo ("Nuevo stock: ")  
+                 nuevo_proveedor = validar_codigo("Ingrese el codigo del nuevo proveedor: ") 
+                 
+                 if nuevo_proveedor not in proveedores: 
+                     print("Error: el proveedor no existe")
+                     return
+                 
+                 inventario[codigo]["proveedor"] = nuevo_proveedor 
 
-                 inventario[codigo]["precio"] = nuevo_precio
-                 inventario[codigo]["stock"]= nuevo_stock
-                 print("----producto actualizado con exito-------")
+                 print("----proveedor actualizado con exito-------")
             
+             case "4":
+               print("Saliendo...")
+               return
+
              case _ :
                  print("opcion invalida")
 
@@ -169,7 +177,7 @@ def mostrar_menu():
     print("\n" + "=" * 40)
     print("  GESTION DE PRODUCTOS")
     print("=" * 40)
-    print("1.Ingresar producto")
+    print("1.Registrar producto")
     print("2.Mostrar productos")
     print("3.Buscar producto ")
     print("4.Editar informacion de producto")
@@ -196,7 +204,7 @@ def menu_productos(inventario, proveedores):
               buscar_producto(inventario)  
 
             case"4"  : 
-              editar_informacion_producto(inventario)   
+              editar_informacion_producto(inventario,proveedores)   
 
             case"5":
               eliminar_producto(inventario)
