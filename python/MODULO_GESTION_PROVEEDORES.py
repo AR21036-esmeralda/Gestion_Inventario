@@ -46,6 +46,9 @@ def validar_codigo(mensaje):
 def registrar_proveedor(proveedores):
 
     codigo_proveedor = validar_codigo("Ingrese codigo del proveedor: ")
+
+    # Verifica que el código del proveedor no esté registrado previamente
+    # para evitar duplicados
     if codigo_proveedor in proveedores:
         print ("Error : Ya existe un proveedor con ese codigo " )
         return 
@@ -91,6 +94,8 @@ def mostrar_proveedores(proveedores):
 
 def buscar_proveedor(proveedores):      
     codigo_proveedor=validar_codigo("Ingrese el codigo del proveedor que desea buscar: ")
+
+    # Permite localizar un proveedor mediante su código
     proveedor = proveedores.get(codigo_proveedor)
 
     if proveedor:
@@ -112,6 +117,7 @@ def editar_informacion_proveedor(proveedores):
          print("3.Modificar direccion y telefono")
          opcion = input("Ingrese opcion: ")
 
+         # Permite actualizar información específica del proveedor
          match opcion :
              case "1" :
                  nuevo_numero_telefono = validar_telefono("Nuevo telefono: ")
@@ -142,7 +148,7 @@ def editar_informacion_proveedor(proveedores):
 def eliminar_proveedor(proveedores):
     print("eliminar proveedor")
     codigo_proveedor=validar_codigo("Ingrese el codigo del proveedor que desea eliminar: ")
-    if codigo_proveedor in proveedores:
+    if codigo_proveedor in proveedores:       # Antes de eliminar verifica que el proveedor a aeliminar exista en el dic
         del proveedores[codigo_proveedor]
         print("---------proveedor eliminado con exito---------")
     else:
