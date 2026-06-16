@@ -2,6 +2,8 @@
 from MODULO_GESTION_PROVEEDORES import validar_codigo, validar_texto_no_vacio
 
 
+#Solicita al usuario un número entero positivo.
+# Repite la solicitud hasta recibir un valor válido.  
 def validar_numero_entero_positivo(mensaje):
        while True:
           valor = input(mensaje).strip()
@@ -22,6 +24,10 @@ def validar_numero_entero_positivo(mensaje):
                print("Error: debe ingresar un numero valido" )
 
 
+
+
+#Solicita al usuario un número decimal positivo.
+#  Repite la solicitud hasta recibir un valor válido.
 def validar_numero_decimal_positivo(mensaje):
        while True:
             valor = input(mensaje).strip()
@@ -42,11 +48,12 @@ def validar_numero_decimal_positivo(mensaje):
 
 
 
-
+#Registra un nuevo producto en el inventario y lo asocia
+# a un proveedor previamente registrado.
 def ingresar_producto(inventario,proveedores):
 
     codigo = validar_codigo("Ingrese codigo del producto: ")
-    if codigo in inventario:
+    if codigo in inventario:                                     # valida que el codigo del producto sea unica y no haya duplicados 
         print ("Error : Ya existe un producto con ese codigo " )
         return 
     
@@ -56,10 +63,10 @@ def ingresar_producto(inventario,proveedores):
     
     stock= validar_numero_entero_positivo("Ingrese la cantidad de producto en bodega: ") 
 
-    codigo_proveedor = validar_codigo(
-    "Ingrese codigo del proveedor: "
-)
+    codigo_proveedor = validar_codigo("Ingrese codigo del proveedor: ")
+                                        
 
+    # Verifica que el proveedor exista antes de asociarlo al producto
     if codigo_proveedor not in proveedores:
      print("Error: el proveedor no existe. Debe registrarlo antes de asignarlo al producto")
      return 
@@ -91,6 +98,7 @@ def mostrar_productos(inventario):
     print("       LISTA DE PRODUCTOS")
     print("=" * 40)
 
+    # Recorre todos los productos registrados y muestra sus datos 
     for codigo,datos in inventario.items():
        
        print("codigo_producto:",codigo)
@@ -139,7 +147,7 @@ def editar_informacion_producto(inventario,proveedores):
              case "3":
                  nuevo_proveedor = validar_codigo("Ingrese el codigo del nuevo proveedor: ") 
                  
-                 if nuevo_proveedor not in proveedores: 
+                 if nuevo_proveedor not in proveedores:           # Se valida que el nuevo proveedor exista para mantener la integridad de los datos
                      print("Error: el proveedor no existe")
                      return
                  
